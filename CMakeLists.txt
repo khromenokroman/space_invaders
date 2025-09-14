@@ -1,0 +1,48 @@
+cmake_minimum_required(VERSION 3.23)
+
+project(space_invaders
+        VERSION 0.0.2.0
+        LANGUAGES CXX
+        HOMEPAGE_URL "https://github.com/khromenokroman/space_invaders"
+)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+include(GNUInstallDirs)
+
+message(STATUS "CXX Compiler path: ${CMAKE_CXX_COMPILER}")
+message(STATUS "CXX Compiler name: ${CMAKE_CXX_COMPILER_ID}")
+message(STATUS "CXX Compiler version: ${CMAKE_CXX_COMPILER_VERSION}")
+
+add_definitions("-DVERSION_MAJOR=${PROJECT_VERSION_MAJOR}")
+add_definitions("-DVERSION_MINOR=${PROJECT_VERSION_MINOR}")
+add_definitions("-DVERSION_PATCH=${PROJECT_VERSION_PATCH}")
+add_definitions("-DVERSION_TWEAK=${PROJECT_VERSION_TWEAK}")
+
+set(CMAKE_VERBOSE_MAKEFILE ON)
+
+configure_file(Version.in Version @ONLY)
+
+add_custom_target(version
+        -DVERSION_MAJOR="${PROJECT_VERSION_MAJOR}"
+        -DVERSION_MINOR="${PROJECT_VERSION_MINOR}"
+        -DVERSION_PATCH="${PROJECT_VERSION_PATCH}"
+        -DVERSION_TWEAK="${PROJECT_VERSION_TWEAK}"
+)
+
+set(CPACK_DEBIAN_FILE_NAME "DEB-DEFAULT")
+set(CPACK_DEBIAN_BIN_PACKAGE_NAME "${PROJECT_NAME}${PROJECT_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VENDOR "Roman Khromenok")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Space invaders game")
+set(CPACK_PACKAGE_VERSION  "${PROJECT_VERSION}")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "Space invaders")
+set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+set(CPACK_GENERATOR "DEB")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Roman Khromenok <khromenokroman@yandex.ru>")
+set(CPACK_DEBIAN_PACKAGE_SECTION "games")
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+
+add_subdirectory(src)
+
+include(CPack)
